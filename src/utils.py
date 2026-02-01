@@ -191,7 +191,7 @@ def get_llm(model: Optional[str] = None, temperature: float = 0.0):
     model_name = model or os.getenv('LLM_MODEL', 'gpt-4o-mini')
 
     if provider == 'openai':
-        from langchain_openai import ChatOpenAI
+        from langchain_openai import AzureChatOpenAI
 
         api_key = os.getenv('OPENAI_API_KEY')
         if not api_key:
@@ -200,10 +200,12 @@ def get_llm(model: Optional[str] = None, temperature: float = 0.0):
                 "Obtenha uma chave em: https://platform.openai.com/api-keys"
             )
 
-        return ChatOpenAI(
+        return AzureChatOpenAI(
+            azure_endpoint=os.getenv('AZURE_ENDPOINT'),
             model=model_name,
             temperature=temperature,
-            api_key=api_key
+            api_key=api_key,
+            api_version="2025-04-01-preview"
         )
 
     elif provider == 'google':
